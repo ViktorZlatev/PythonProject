@@ -22,13 +22,13 @@
      
       {% for friend in friends %}
       
-      <a href=" {% url 'detail' friend.profile.id %} " style="color:black; text-decoration: none">
+      <a href= " {% url 'detail' friend.friend_profile.id %} " style="color:black; text-decoration: none">
       <div class="friends">
         <div class="pic">
-          <img src="{{friend.profile.pic.url}}" alt="" />
+          <img src="{{friend.friend_profile.pic.url}}" , alt="" />
         </div>
         <div class="name">
-          <h5>{{friend.profile.name}}</h5>
+          <h5>{{friend.friend_profile.name}}</h5>
           <p>How are you doing today</p>
         </div>
         <div class="time_new_msg">
@@ -106,5 +106,6 @@
       </div>
     </div>
   </div>
+
 
 {% endblock %}
