@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Profile , Friend
 
 # Create your views here.
 def index(request):
@@ -8,5 +9,6 @@ def index(request):
     return render(request , "mychatapp/index.html" , context)
 
 def detail(request , pk):
-    context = {}
+    friend = Friend.objects.get(friend_profile_id = pk)
+    context = {'friend':friend}
     return render(request , "mychatapp/detail.html" , context)

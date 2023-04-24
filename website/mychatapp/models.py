@@ -1,4 +1,3 @@
-import profile
 from xmlrpc.client import Boolean
 from django.db import models
 from django.contrib.auth.models import User

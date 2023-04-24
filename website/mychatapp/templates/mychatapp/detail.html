@@ -4,8 +4,7 @@
 
 <style>
     .forms{
-        border: 1px solid slateblue;
-        
+        border: 1px solid slateblue;  
         width: 100%;
         border-radius: 5px;
         padding: 10px 10px;
@@ -16,7 +15,7 @@
 <div class="chat-container2">
     <div class="identity">
         <div>
-           <a href="{% url 'index' %}">
+           <a href="{% url 'index' %}" style="color:black">
             <svg
             xmlns="http://www.w3.org/2000/svg"
             width="26"
@@ -37,10 +36,10 @@
            </a>
         </div>
 
-        <h3>{{friend.profile.name}}</h3>
+        <h3>{{friend.friend_profile.name}}</h3>
 
         <div class="pro-pic">
-            <img src="{{friend.profile.pic.url}}" alt="profile-picture">
+            <img src="{{friend.friend_profile.pic.url}}" alt="profile-picture">
         </div>
 
 
@@ -59,7 +58,7 @@
                 {{chat}}
             </div>
 
-            {% elif chat.msg_sender == profile and chat.msg_receiver == user %}
+            {% elif chat.msg_sender == friend_profile and chat.msg_receiver == user %}
 
             <div class="chat-box-received">
                 {{chat}}
@@ -95,135 +94,7 @@
     </div>
 
    
-
-
-
 </div>
-
-<script>
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
-
-    let form = document.getElementById("myform")
-    
-    form.addEventListener("submit", sendChat)
-
-    function sendChat(e){
-        e.preventDefault()
-        let chatMessage= document.getElementById("id_body").value
-        console.log(chatMessage)
-
-        const data = { msg: chatMessage };
-        
-        let url = "{% url 'sent_msg' friend.profile.id %}"
-
-fetch(url, {
-  method: 'POST', // or 'PUT'
-  headers: {
-    'Content-Type': 'application/json',
-    'X-CSRFToken': csrftoken
-  },
-  body: JSON.stringify(data),
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Success:', data);
-  let chat_body = document.getElementById('chat-body')
-  let chatMessageBox = document.createElement("div")
-  chatMessageBox.classList.add("chat-box-sent")
-  chatMessageBox.innerText = data
-  chat_body.append(chatMessageBox)
-  document.getElementById("id_body").value=""
-})
-.catch((error) => {
-  console.error('Error:', error);
-});
-
-
-    }
-
-
-
-
-    
-
-setInterval(receiveMessages, 2000)
-
-
-let counter = {{num}}
-function receiveMessages(){
-
-
-    let url = "{% url 'rec_msg' friend.profile.id %}"
-
-        fetch(url)
-        .then(response => response.json())
-        .then(data => {
-        console.log('Success:', data);
-        
-        
-
-        if(data.length == 0){}
-
-        else{
-
-            let lastMsg = data[data.length-1]
-
-            if(counter == data.length){
-                console.log("there is no new chat")
-            }
-
-        
-        
-
-            else{
-
-
-                let chat_body = document.getElementById('chat-body')
-                let chatMessageBox = document.createElement("div")
-                
-                chatMessageBox.classList.add("chat-box-received")
-                chatMessageBox.innerText = lastMsg
-                chat_body.append(chatMessageBox)
-                document.getElementById("id_body").value=""
-                console.log()
-
-                console.log
-
-
-            }
-
-        }
-        
-        counter = data.length
-
-
-
-        })
-        .catch((error) => {
-        console.error('Error:', error);
-        });
-
-}
-
-
-
-</script>
 
 
 {% endblock %}
