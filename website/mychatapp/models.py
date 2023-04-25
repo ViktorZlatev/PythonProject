@@ -19,3 +19,14 @@ class Friend(models.Model):
     
     def __str__(self):
         return self.friend_profile.name
+    
+
+class Message(models.Model):
+    body = models.TextField()
+    msg_sender = models.ForeignKey(Profile , on_delete=models.CASCADE , related_name="msg_sender")
+    msg_reciver = models.ForeignKey( Profile , on_delete=models.CASCADE  , related_name="msg_reciver" ) 
+    seen = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.body
+    
