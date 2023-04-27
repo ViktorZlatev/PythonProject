@@ -52,22 +52,19 @@
 
             
             {% for chat in chats %}
-            {% if chat.msg_sender == user and chat.msg_receiver == profile %}
+            {% if chat.msg_sender == user and chat.msg_reciver == profile %}
 
             <div class="chat-box-sent">
                 {{chat}}
             </div>
 
-            {% elif chat.msg_sender == friend_profile and chat.msg_receiver == user %}
+            {% elif chat.msg_sender == profile and chat.msg_reciver == user %}
 
             <div class="chat-box-received">
                 {{chat}}
             </div>
 
             {% endif %}
-
-
-
             
 
             {% endfor %}
@@ -92,9 +89,6 @@
 
 
     </div>
-
-   
-</div>
 
 
 {% endblock %}
