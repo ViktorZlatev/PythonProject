@@ -18,10 +18,11 @@ def detail(request,pk):
     user = request.user.profile
     profile = Profile.objects.get(id=friend.friend_profile.id)
     chats = Message.objects.all()
+    rec_chats = Message.objects.filter(msg_sender = profile , msg_reciver = user)
     form = MessageForm()
     
     context = {"friend": friend, "form": form, "user":user, 
-               "profile":profile, "chats": chats}
+               "profile":profile, "chats": chats , "num":rec_chats.count()}
     return render(request, "mychatapp/detail.html", context)
 
 
@@ -33,3 +34,14 @@ def sentMessages(request ,pk):
     new_chat = data["msg"]
     new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
     return JsonResponse(new_chat_message.body , safe=False)
+
+
+def recivedMessages( request , pk ):
+    arr = []
+    friend = Friend.objects.get(friend_profile_id=pk)
+    user = request.user.profile
+    profile = Profile.objects.get(id=friend.friend_profile.id)
+    chats = Message.objects.filter(msg_sender = profile , msg_reciver = user)
+    for chat in chats:
+        arr.append(chat.body) 
+    return JsonResponse(arr , safe=False)
