@@ -108,5 +108,26 @@
     </div>
   </div>
 
+  <script>
+
+    setInterval(getNotification, 1000)
+
+    function getNotification(){
+      let url = "{% url 'notification' %}"
+
+      fetch(url)
+      .then(res=>res.json())
+      .then(data=>{
+        console.log(data)
+        let chatNotificationBtn = document.getElementsByClassName("msg")
+        for(let i = 0; i<data.length; i++){
+          chatNotificationBtn[i].innerText = data[i]
+        }
+      })
+      .catch(error => console.log(error))
+    }
+
+  </script>
+
 
 {% endblock %}

@@ -19,6 +19,7 @@ def detail(request,pk):
     profile = Profile.objects.get(id=friend.friend_profile.id)
     chats = Message.objects.all()
     rec_chats = Message.objects.filter(msg_sender = profile , msg_reciver = user)
+    rec_chats.update(seen=True)
     form = MessageForm()
     
     context = {"friend": friend, "form": form, "user":user, 
@@ -45,3 +46,13 @@ def recivedMessages( request , pk ):
     for chat in chats:
         arr.append(chat.body) 
     return JsonResponse(arr , safe=False)
+
+
+def chatNotification(request):
+    user = request.user.profile
+    friends = user.friends.all()
+    arr = []
+    for friend in friends:
+        chats = Message.objects.filter(msg_sender__id=friend.friend_profile.id, msg_reciver=user, seen=False)
+        arr.append(chats.count())
+    return JsonResponse(arr, safe=False)
