@@ -82,9 +82,10 @@ def sentMessages(request ,pk):
     is_toxicity = True if len(is_toxicity_arr) > 0 else False
     print(is_toxicity)
     # If is_toxicity, then don't send this message
-    
-    new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
-    return JsonResponse(new_chat_message.body , safe=False)
+    if is_toxicity == False:
+        new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
+        return JsonResponse(new_chat_message.body , safe=False)
+    else : return JsonResponse()
 
 
 def recivedMessages( request , pk ):
