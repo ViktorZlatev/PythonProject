@@ -11,7 +11,15 @@ import pandas as pd
 
 from tensorflow.keras.layers import TextVectorization
 
-model = tf.keras.models.load_model('../my_model.h5')
+# Loading tensorflow model and preprocessing data
+model = tf.keras.models.load_model('../model_comment_toxicity.h5', compile=False)
+
+df = pd.read_csv('../comment_toxicity_train.csv')
+X = df['comment_text']
+y = df[df.columns[2:]].values
+MAX_FEATURES = 200000
+vectorizer = TextVectorization(max_tokens=MAX_FEATURES, output_sequence_length=1800, output_mode='int')
+vectorizer.adapt(X.values)
 
 
 # Create your views here.
@@ -60,25 +68,19 @@ def friends(request):
 #saving,sending and recieving msg
 
 def sentMessages(request ,pk):
+    is_toxicity = False
     friend = Friend.objects.get(friend_profile_id=pk)
     user = request.user.profile
     profile = Profile.objects.get(id=friend.friend_profile.id)
     data = json.loads(request.body)
     new_chat = data["msg"]
     
-    # Neural Network loaded
-    df = pd.read_csv('../comment_toxicity_train.csv')
-    X = df['comment_text']
-    y = df[df.columns[2:]].values
-    MAX_FEATURES = 200000
-    vectorizer = TextVectorization(max_tokens=MAX_FEATURES, output_sequence_length=1800, output_mode='int')
-    vectorizer.adapt(X.values)
-    vectorized_text = vectorizer(X.values)
-    
+    # Model prediction   
     input_str = vectorizer(new_chat)
     res = model.predict(np.expand_dims(input_str, 0))
+    is_toxicity = [type_toxicity for type_toxicity in df.columns[2:] if res[0][df.columns.get_loc(type_toxicity)] > 0.5]
     
-    # is_toxicity = [column]
+    print(is_toxicity)
     
     
     
