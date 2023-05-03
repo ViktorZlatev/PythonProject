@@ -11,7 +11,7 @@ import pandas as pd
 
 from tensorflow.keras.layers import TextVectorization
 
-model = tf.keras.models.load_model('my_model.h5')
+model = tf.keras.models.load_model('../my_model.h5')
 
 
 # Create your views here.
