@@ -5,6 +5,14 @@ from django.http import JsonResponse
 import json
 from django.contrib.auth import get_user_model
 
+import tensorflow as tf
+import numpy as np
+import pandas as pd
+
+from tensorflow.keras.layers import TextVectorization
+
+model = tf.keras.models.load_model('my_model.h5')
+
 
 # Create your views here.
 
@@ -57,6 +65,18 @@ def sentMessages(request ,pk):
     profile = Profile.objects.get(id=friend.friend_profile.id)
     data = json.loads(request.body)
     new_chat = data["msg"]
+    
+    # Neural Network loaded
+    MAX_FEATURES = 200000
+    vectorizer = TextVectorization(max_tokens=MAX_FEATURES, output_sequence_length=1800, output_mode='int')
+    vectorizer.adapt(X.values)
+    vectorized_text = vectorizer(X.values)
+    
+    input_str = vectorizer(new_chat)
+    res = model.predict(np.expand_dims(input_str, 0))
+    
+    
+    
     new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
     return JsonResponse(new_chat_message.body , safe=False)
 
