@@ -3,8 +3,13 @@ from .models import Message, Profile, Friend
 from .forms import MessageForm
 from django.http import JsonResponse
 import json
+from django.contrib.auth import get_user_model
+
 
 # Create your views here.
+
+
+#home
 def index(request):
     user = request.user.profile
     friends = user.friends.all()
@@ -12,6 +17,9 @@ def index(request):
     context = {"user": user, "friends": friends , "form":form}
     return render(request, "mychatapp/index.html", context)
 
+
+
+#chatting
 
 def detail(request,pk):
     friend = Friend.objects.get(friend_profile_id=pk)
@@ -26,6 +34,22 @@ def detail(request,pk):
                "profile":profile, "chats": chats , "num":rec_chats.count()}
     return render(request, "mychatapp/detail.html", context)
 
+
+
+#adding_friends
+
+def friends(request):
+    user = request.user.profile
+    friends = user.friends.all()
+    friends = get_user_model()
+    all_friends = friends.objects.all()
+    form = MessageForm()
+    context = {"user": user, "friends": all_friends , "form":form}
+    return render(request, "mychatapp/friends.html" , context)
+
+
+
+#saving,sending and recieving msg
 
 def sentMessages(request ,pk):
     friend = Friend.objects.get(friend_profile_id=pk)

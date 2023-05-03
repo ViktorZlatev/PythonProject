@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
 <div class="chat-container">
     <div class="main">
       <div class="logo">
@@ -16,41 +17,12 @@
       </div>
     </div>
    
-    <div class="header">Messages</div>
-  
-    <div class="friends-container">
-     
-      {% for friend in friends %}
-      
-      <a href= " {% url 'detail' friend.friend_profile.id %} " style="color:black; text-decoration: none">
-      <div class="friends">
-        <div class="pic">
-          <img src="{{friend.friend_profile.pic.url}}" , alt="" />
-        </div>
-        <div class="name">
-          <h4>{{friend.friend_profile.name}}</h4>
-          <p>How are you doing today?</p>
-
-        </div>
-        <div class="time_new_msg">
-          {% comment %} <p>7:30am</p> {% endcomment %}
-  
-   <div class="msg">0</div>
-  
-          
-        </div>
-      </div>
-  </a>
-  
-  {% endfor %}
-  
-  
-   
-    </div>
+    <div class="header">Users</div>
+    
   
     <div class="footer">
       <div>
-        <a href="{% url 'friends' %}" >
+        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="26"
@@ -67,10 +39,11 @@
             d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"
           />
         </svg>
-      </a>
+      
       </div>
   
       <div>
+        <a href="{% url 'index' %}" style="color:black">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="26"
@@ -87,11 +60,12 @@
             fill-rule="evenodd"
             d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"
           />
-        </svg>
+         </svg>
+        </a>
       </div>
   
       <div>
-        
+       
          <svg
           xmlns="http://www.w3.org/2000/svg"
           width="26"
@@ -111,27 +85,6 @@
       </div>
     </div>
   </div>
-
-  <script>
-
-    setInterval(getNotification, 1000)
-
-    function getNotification(){
-      let url = "{% url 'notification' %}"
-
-      fetch(url)
-      .then(res=>res.json())
-      .then(data=>{
-        console.log(data)
-        let chatNotificationBtn = document.getElementsByClassName("msg")
-        for(let i = 0; i<data.length; i++){
-          chatNotificationBtn[i].innerText = data[i]
-        }
-      })
-      .catch(error => console.log(error))
-    }
-
-  </script>
 
 
 {% endblock %}
