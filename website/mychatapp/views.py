@@ -12,7 +12,7 @@ import pandas as pd
 from tensorflow.keras.layers import TextVectorization
 
 # Loading tensorflow model and preprocessing data
-model = tf.keras.models.load_model('../model_comment_toxicity.h5', compile=False)
+model = tf.keras.models.load_model('../model_comment_toxicity_2.h5', compile=False)
 
 df = pd.read_csv('../comment_toxicity_train.csv')
 X = df['comment_text']
