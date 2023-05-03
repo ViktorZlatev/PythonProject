@@ -78,11 +78,10 @@ def sentMessages(request ,pk):
     # Model prediction   
     input_str = vectorizer(new_chat)
     res = model.predict(np.expand_dims(input_str, 0))
-    is_toxicity = [type_toxicity for type_toxicity in df.columns[2:] if res[0][df.columns.get_loc(type_toxicity)] > 0.5]
-    
+    is_toxicity_arr = [type_toxicity for type_toxicity in res[0] if type_toxicity > 0.5]
+    is_toxicity = True if len(is_toxicity_arr) > 0 else False
     print(is_toxicity)
-    
-    
+    # If is_toxicity, then don't send this message
     
     new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
     return JsonResponse(new_chat_message.body , safe=False)
