@@ -20,6 +20,7 @@ y = df[df.columns[2:]].values
 MAX_FEATURES = 200000
 vectorizer = TextVectorization(max_tokens=MAX_FEATURES, output_sequence_length=1800, output_mode='int')
 vectorizer.adapt(X.values)
+TOXICITY_FLAG = 0.65
 
 
 # Create your views here.
@@ -78,7 +79,7 @@ def sentMessages(request ,pk):
     # Model prediction   
     input_str = vectorizer(new_chat)
     res = model.predict(np.expand_dims(input_str, 0))
-    is_toxicity_arr = [type_toxicity for type_toxicity in res[0] if type_toxicity > 0.5]
+    is_toxicity_arr = [type_toxicity for type_toxicity in res[0] if type_toxicity > TOXICITY_FLAG]
     is_toxicity = True if len(is_toxicity_arr) > 0 else False
     print(is_toxicity)
     # If is_toxicity, then don't send this message
