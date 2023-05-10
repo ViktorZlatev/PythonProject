@@ -56,11 +56,14 @@ def detail(request,pk):
 
 def friends(request):
     user = request.user.profile
-    friends = user.friends.all()
-    friends = get_user_model()
-    all_friends = friends.objects.all()
+    #all_friends = user.friends.all()
+    users = Profile.objects.all()
+    arr = []
+    #for friend in all_friends:
+     #   if friend not in users:
+      #      arr.append(friend)
     form = MessageForm()
-    context = {"user": user, "friends": all_friends , "form":form}
+    context = {"user": user, "form":form , "friends":users }
     return render(request, "mychatapp/friends.html" , context)
 
 
