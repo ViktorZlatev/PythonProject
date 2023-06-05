@@ -30,3 +30,8 @@ class Message(models.Model):
     def __str__(self):
         return self.body
     
+
+class Image(models.Model):
+    image=models.ImageField(upload_to="img/%y")
+    img_sender = models.ForeignKey(Profile , on_delete=models.CASCADE , related_name="img_sender" , default='' )
+    img_reciver = models.ForeignKey( Profile , on_delete=models.CASCADE  , related_name="img_reciver" , default='') 
