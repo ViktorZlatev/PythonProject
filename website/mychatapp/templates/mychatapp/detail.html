@@ -56,16 +56,37 @@
 
             <div class="chat-box-sent">
                 {{chat}}
+
             </div>
 
             {% elif chat.msg_sender == profile and chat.msg_reciver == user %}
 
             <div class="chat-box-received">
                 {{chat}}
+                
             </div>
 
             {% endif %}
             
+            {% endfor %}
+
+
+            
+            {% for x in img_all %}
+
+            {% if x.img_sender == user and x.img_reciver == profile %}
+
+            <div class="chat-box-sent">
+                <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
+            </div>
+
+            {% elif x.img_sender == profile and x.img_reciver == user %}
+            
+            <div class="chat-box-received">
+                <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
+            </div>
+            
+            {% endif %}
 
             {% endfor %}
 
@@ -73,11 +94,10 @@
             <div class="chat-box-sent" id ="chat-box-sent" style="display: none">
                
             </div>
-
-            
         </div>
+
     
-        <form action="" id="myform" method="POST">
+        <form action="" id="myform">
             {% csrf_token %}
             
             {{form.body}}
@@ -86,8 +106,17 @@
         </form>
 
 
-    </div>
+        <form action="" method="post" id="img_form" enctype="multipart/form-data">
 
+            {% csrf_token %}
+            {{form_img.as_p}}
+            
+            <button id="submit" class="btn btn-lg btn-success">Upload</button>
+        </form> 
+
+</div>
+
+    </div>
 
     <script>
 
@@ -111,15 +140,20 @@
 
 
     let form = document.getElementById("myform")
+    //let img = document.getElementById("img_form")
     
-    form.addEventListener("submit", sendChat)
+    form.addEventListener("submit", sendChat);
+    //img.addEventListener("submit", sendImg);
 
     function sendChat(e){
         e.preventDefault()
-        let chatMessage= document.getElementById("id_body").value
-        console.log(chatMessage)
 
-        const data = { msg: chatMessage };
+        
+        let chatMessage= document.getElementById("id_body").value
+
+        console.log(chatMessage)
+       
+        const data = { msg: chatMessage};
         
         let url = "{% url 'sent_msg' friend.friend_profile.id %}"
 

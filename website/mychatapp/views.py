@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Message, Profile, Friend
-from .forms import MessageForm
+from .models import Message, Profile, Friend , Image
+from .forms import MessageForm , ImageForm
 from django.http import JsonResponse
 import json
-from django.contrib.auth import get_user_model
-
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -48,9 +46,25 @@ def detail(request,pk):
     rec_chats = Message.objects.filter(msg_sender = profile , msg_reciver = user)
     rec_chats.update(seen=True)
     form = MessageForm()
-    
+
+    if request.method == "POST":
+        img=ImageForm(data=request.POST,files=request.FILES)
+        if img.is_valid():
+            image = img.save(commit=False)
+            image.img_sender = user
+            image.img_reciver = profile
+            image.save()
+            
+            obj=img.instance
+            context = {"friend": friend, "form": form, "user":user, 
+                "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj }
+            return render(request, "mychatapp/detail.html", context)
+    else:
+        img=ImageForm()
+        image = '0'
+    img_all=Image.objects.all()
     context = {"friend": friend, "form": form, "user":user, 
-               "profile":profile, "chats": chats , "num":rec_chats.count()}
+                "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "img_all":img_all}
     return render(request, "mychatapp/detail.html", context)
 
 
@@ -81,6 +95,7 @@ def sentMessages(request ,pk):
     data = json.loads(request.body)
     new_chat = data["msg"]
     
+
     # Model prediction   
     input_str = vectorizer(new_chat)
     res = model.predict(np.expand_dims(input_str, 0))
