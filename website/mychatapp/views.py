@@ -9,6 +9,8 @@ import pandas as pd
 
 from tensorflow.keras.layers import TextVectorization
 
+TOXICITY_FLAG = 0.65
+
 # Loading tensorflow model and preprocessing data
 model = tf.keras.models.load_model('../model_comment_toxicity_2.h5', compile=False)
 
