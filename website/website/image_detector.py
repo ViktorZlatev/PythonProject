@@ -1,8 +1,15 @@
 from nudenet import NudeClassifier
 from pathlib import Path
+import os
 
-image_path = r"C:\Users\sas\Pictures\test_image.jpg"
-video_path = r"C:\Users\sas\Videos\SusCam video\iphone_email.mp4"
+
+
+# image_path = os.path.abspath(r"website\static\img\up_img\test_image.jpg")
+# print(image_path)
+# img_pth = Path(os.path.abspath(r"\PythonProject\website\static\img\23\test_image.jpg"))
+
+
+# video_path = r"C:\Users\sas\Videos\SusCam video\iphone_email.mp4"
 
 THRESHOLD = 0.65
 
@@ -28,6 +35,7 @@ def classify_nudity_video(video_path):
     return False
 
 
+# print(classify_nudity_image(image_path))
 # print(classify_nudity_image(image_path))
 # print(classify_nudity_video(video_path))
 

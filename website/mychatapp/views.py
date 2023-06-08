@@ -6,8 +6,13 @@ import json
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import os
+
+
 
 from tensorflow.keras.layers import TextVectorization
+from website.image_detector import *
+
 
 TOXICITY_FLAG = 0.65
 
@@ -50,12 +55,33 @@ def detail(request,pk):
     if request.method == "POST":
         img=ImageForm(data=request.POST,files=request.FILES)
         if img.is_valid():
+            obj=img.instance
+            
+            # with open(obj.image.url) as f:
+            #     data = f.read()
+            
+            # obj.image.save('imgfilename.jpg', ContentFile(data))
+            # print("Saved image")
+            # print(PROJECT_ROOT)
+            
+            # image_name = obj.image.url.split('/')[-1]
+            # base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            # full_file_path = os.path.join(base_directory, image_name)
+            
+            print(f"Our Image url: {obj.image.url}")
+            file_path = f'static{obj.image.url}'
+            file_path = os.path.abspath(file_path)
+            # print(f"Type of obj.image.url: {type(obj.image.url)}")
+            print(f"File path: {file_path}")
+              
             image = img.save(commit=False)
             image.img_sender = user
             image.img_reciver = profile
             image.save()
             
-            obj=img.instance
+            result_nudity = classify_nudity_image(file_path)
+            print(f"Result of nudity: {result_nudity}")
+            
             context = {"friend": friend, "form": form, "user":user, 
                 "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj }
             return render(request, "mychatapp/detail.html", context)
