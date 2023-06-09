@@ -3,15 +3,12 @@ from .models import Message, Profile, Friend , Image
 from .forms import MessageForm , ImageForm
 from django.http import JsonResponse
 import json
-import tensorflow as tf
 import numpy as np
-import pandas as pd
 import os
 
-from website.image_detector import *
-from website.comment_toxicity_detector import *
+import website.image_detector as image_detector
+import website.comment_toxicity_detector as toxicity_detector 
 
-# Create your views here.
 
 
 #home
@@ -50,7 +47,7 @@ def detail(request,pk):
             image.img_reciver = profile
             image.save()
             
-            result_nudity = classify_nudity_image(file_path)
+            result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
             print(f"Result of nudity: {result_nudity}")
             
             context = {"friend": friend, "form": form, "user":user, 
@@ -94,10 +91,8 @@ def sentMessages(request ,pk):
     
 
     # Model prediction   
-    input_str = vectorizer(new_chat)
-    res = model.predict(np.expand_dims(input_str, 0))
-    is_toxicity_arr = [type_toxicity for type_toxicity in res[0] if type_toxicity > TOXICITY_FLAG]
-    is_toxicity = True if len(is_toxicity_arr) > 0 else False
+    input_str = toxicity_detector.encode_text(new_chat) # Text vectorization
+    is_toxicity = toxicity_detector.classify_toxicity(input_str) # Making prediction and return boolean
     print(is_toxicity)
     # If is_toxicity, then don't send this message
     if is_toxicity == False:
