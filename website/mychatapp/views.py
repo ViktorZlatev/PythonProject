@@ -8,25 +8,8 @@ import numpy as np
 import pandas as pd
 import os
 
-
-
-from tensorflow.keras.layers import TextVectorization
 from website.image_detector import *
-
-
-TOXICITY_FLAG = 0.65
-
-# Loading tensorflow model and preprocessing data
-model = tf.keras.models.load_model('../model_comment_toxicity_2.h5', compile=False)
-
-df = pd.read_csv('../comment_toxicity_train.csv')
-X = df['comment_text']
-y = df[df.columns[2:]].values
-MAX_FEATURES = 200000
-vectorizer = TextVectorization(max_tokens=MAX_FEATURES, output_sequence_length=1800, output_mode='int')
-vectorizer.adapt(X.values)
-
-
+from website.comment_toxicity_detector import *
 
 # Create your views here.
 
@@ -57,21 +40,9 @@ def detail(request,pk):
         if img.is_valid():
             obj=img.instance
             
-            # with open(obj.image.url) as f:
-            #     data = f.read()
-            
-            # obj.image.save('imgfilename.jpg', ContentFile(data))
-            # print("Saved image")
-            # print(PROJECT_ROOT)
-            
-            # image_name = obj.image.url.split('/')[-1]
-            # base_directory = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            # full_file_path = os.path.join(base_directory, image_name)
-            
-            print(f"Our Image url: {obj.image.url}")
             file_path = f'static{obj.image.url}'
             file_path = os.path.abspath(file_path)
-            # print(f"Type of obj.image.url: {type(obj.image.url)}")
+
             print(f"File path: {file_path}")
               
             image = img.save(commit=False)
