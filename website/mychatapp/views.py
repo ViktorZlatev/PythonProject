@@ -39,6 +39,8 @@ def detail(request,pk):
             
             file_path = f'static{obj.image.url}'
             file_path = os.path.abspath(file_path)
+            result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
+            print(f"Result of nudity: {result_nudity}")
 
             print(f"File path: {file_path}")
               
@@ -47,8 +49,6 @@ def detail(request,pk):
             image.img_reciver = profile
             image.save()
             
-            result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
-            print(f"Result of nudity: {result_nudity}")
             
             context = {"friend": friend, "form": form, "user":user, 
                 "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj }
