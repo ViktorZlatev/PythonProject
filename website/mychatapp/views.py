@@ -40,6 +40,8 @@ def detail(request,pk):
             
             file_path = f'static{obj.image.url}'
             file_path = os.path.abspath(file_path)
+            result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
+            print(f"Result of nudity: {result_nudity}")
 
             image = img.save(commit=False)
             image.img_sender = user
