@@ -54,10 +54,8 @@ def detail(request,pk):
             image.nudity=result_nudity
             image.save()
 
-            img_all=Image.objects.all() 
-
             context = {"friend": friend, "form": form, "user":user, 
-            "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj , "nudity": result_nudity , "img_all":img_all}
+            "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj , "nudity": result_nudity}
             return render(request, "mychatapp/detail.html", context)
     else:
         img=ImageForm()
