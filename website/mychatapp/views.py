@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Message, Profile, Friend , Image
 from .forms import MessageForm , ImageForm
 from django.http import JsonResponse
+from django.contrib import messages
 import json
 import numpy as np
 import os
@@ -42,42 +43,30 @@ def detail(request,pk):
             result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
             print(f"Result of nudity: {result_nudity}")
 
-            print(f"File path: {file_path}")
-              
             image = img.save(commit=False)
             image.img_sender = user
             image.img_reciver = profile
             image.save()
-            
-            
+
+            global result_nudity
+            result_nudity =  image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
+            print(f"Result of nudity: {result_nudity}")
+
+            image.nudity=result_nudity
+            image.save()
+
+            img_all=Image.objects.all() 
+
             context = {"friend": friend, "form": form, "user":user, 
-                "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj }
+            "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj , "nudity": result_nudity , "img_all":img_all}
             return render(request, "mychatapp/detail.html", context)
     else:
         img=ImageForm()
-        image = '0'
-    img_all=Image.objects.all()
-    context = {"friend": friend, "form": form, "user":user, 
-                "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "img_all":img_all}
+        img_all=Image.objects.all()    
+        context = {"friend": friend, "form": form, "user":user, 
+                "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "img_all":img_all }
     return render(request, "mychatapp/detail.html", context)
-
-
-
-#adding_friends
-
-def friends(request):
-    user = request.user.profile
-    #all_friends = user.friends.all()
-    users = Profile.objects.all()
-    arr = []
-    #for friend in all_friends:
-     #   if friend not in users:
-      #      arr.append(friend)
-    form = MessageForm()
-    context = {"user": user, "form":form , "friends":users }
-    return render(request, "mychatapp/friends.html" , context)
-
-
+    
 
 #saving,sending and recieving msg
 
@@ -98,7 +87,11 @@ def sentMessages(request ,pk):
     if is_toxicity == False:
         new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
         return JsonResponse(new_chat_message.body , safe=False)
-    else : return JsonResponse()
+    elif result_nudity == True:
+        return JsonResponse("***This image contains nudity and cannot be sent***" , safe = False)
+    else :
+        print('error')
+        return JsonResponse("***This message has toxicity and cannot be send***" , safe=False)
 
 
 def recivedMessages( request , pk ):

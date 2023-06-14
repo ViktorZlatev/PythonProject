@@ -1,5 +1,5 @@
-from tensorflow.keras.layers import TextVectorization
 import tensorflow as tf
+from tensorflow.keras.layers import TextVectorization
 import pandas as pd
 import numpy as np
 
