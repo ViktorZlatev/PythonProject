@@ -40,6 +40,8 @@ def detail(request,pk):
             
             file_path = f'static{obj.image.url}'
             file_path = os.path.abspath(file_path)
+            result_nudity = image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
+            print(f"Result of nudity: {result_nudity}")
 
             image = img.save(commit=False)
             image.img_sender = user
@@ -51,10 +53,9 @@ def detail(request,pk):
 
             image.nudity=result_nudity
             image.save()
-            img_all=Image.objects.all()
-            
+
             context = {"friend": friend, "form": form, "user":user, 
-            "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj , "nudity": result_nudity , 'img_all': img_all}
+            "profile":profile, "chats": chats , "num":rec_chats.count() , "form_img":img , "obj":obj , "nudity": result_nudity}
             return render(request, "mychatapp/detail.html", context)
     else:
         img=ImageForm()
@@ -83,9 +84,11 @@ def sentMessages(request ,pk):
     if is_toxicity == False:
         new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
         return JsonResponse(new_chat_message.body , safe=False)
+    elif result_nudity == True:
+        return JsonResponse("***This image contains nudity and cannot be sent***" , safe = False)
     else :
-        new_chat_message = Message.objects.create(body = "***This message has toxicity and cannot be send***" , msg_sender = user , msg_reciver = profile , seen=False)
-        return JsonResponse(new_chat_message.body , safe=False)
+        print('error')
+        return JsonResponse("***This message has toxicity and cannot be send***" , safe=False)
 
 
 def recivedMessages( request , pk ):
