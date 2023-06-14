@@ -48,7 +48,6 @@ def detail(request,pk):
             image.img_reciver = profile
             image.save()
 
-            global result_nudity
             result_nudity =  image_detector.classify_nudity_image(file_path) # Making prediction and return  boolean if nudity
             print(f"Result of nudity: {result_nudity}")
 
