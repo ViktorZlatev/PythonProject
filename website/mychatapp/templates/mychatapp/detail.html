@@ -70,26 +70,24 @@
             
             {% endfor %}
 
-
-            
             {% for x in img_all %}
 
-            {% if x.img_sender == user and x.img_reciver == profile %}
+                {% if x.img_sender == user and x.img_reciver == profile and not x.nudity%}
 
-            <div class="chat-box-sent">
-                <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
-            </div>
+                <div class="chat-box-sent">
+                    <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
+                </div>
 
-            {% elif x.img_sender == profile and x.img_reciver == user %}
-            
-            <div class="chat-box-received">
-                <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
-            </div>
-            
+                {% elif x.img_sender == profile and x.img_reciver == user and not x.nudity %}
+
+               
+                <div class="chat-box-received">
+                    <img src="{{x.image.url}}" alt="image" class="img-thumbnail" id="img">
+                </div>
+
             {% endif %}
 
             {% endfor %}
-
 
             <div class="chat-box-sent" id ="chat-box-sent" style="display: none">
                
@@ -112,7 +110,7 @@
             {{form_img.as_p}}
             
             <button id="submit" class="btn btn-lg btn-success">Upload</button>
-        </form> 
+        </form>
 
 </div>
 

@@ -35,3 +35,4 @@ class Image(models.Model):
     image=models.ImageField(upload_to="img/%y")
     img_sender = models.ForeignKey(Profile , on_delete=models.CASCADE , related_name="img_sender" , default='' )
     img_reciver = models.ForeignKey( Profile , on_delete=models.CASCADE  , related_name="img_reciver" , default='') 
+    nudity = models.BooleanField(default=False)

@@ -5,8 +5,8 @@ THRESHOLD = 0.65
 
 classifier = NudeClassifier()
 
-def classify_nudity_image(image_path):
-    yhat = classifier.classify(image_path)
+def classify_nudity_image(file_path):
+    yhat = classifier.classify(file_path)
     unsafe_value = list(yhat.values())[0]['unsafe']
     if unsafe_value > THRESHOLD:
         return True
