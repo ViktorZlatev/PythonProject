@@ -83,11 +83,6 @@ def sentMessages(request ,pk):
     if is_toxicity == False:
         new_chat_message = Message.objects.create(body = new_chat , msg_sender = user , msg_reciver = profile , seen=False) 
         return JsonResponse(new_chat_message.body , safe=False)
-<<<<<<< HEAD
-    #elif result_nudity == True:
-    #    return JsonResponse("***This image contains nudity and cannot be sent***" , safe = False)
-=======
->>>>>>> 82c90e0acc6e597e3f7948daec085478020c197b
     else :
         new_chat_message = Message.objects.create(body = "***This message has toxicity and cannot be send***" , msg_sender = user , msg_reciver = profile , seen=False)
         return JsonResponse(new_chat_message.body , safe=False)
